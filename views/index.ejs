@@ -2,10 +2,17 @@
 <html>
   <head>
     <title><%= title %></title>
-    <script src="/javascripts/controller.js"></script> 
+    <script src="/javascripts/jquery-3.6.2.min.js"></script>
+    <script src="/javascripts/jquery-canvas-sparkles.js"></script>
+    <script src="/javascripts/controller.js"></script>
+    <script src="/javascripts/main.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+    <div id="game" class="shadow">
+      <img class="bottom" src="/images/SudoTunic_Level_1.png" />
+      <img class="top" src="/images/SudoTunic_GameBase.png" />
+    </div>
     <div class="start">Start Container</div>
   </body>
 </html>
