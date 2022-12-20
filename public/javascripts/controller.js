@@ -13,7 +13,6 @@ const buttonPushed = {
 const event = new Event('buttonPushed');
   
 var buttonstate = false;
-var pushedButtons = [];
 
 const loop = () => {
   const gamepads = navigator.getGamepads();
@@ -25,8 +24,7 @@ const loop = () => {
 
       gamepad.buttons.map(e => e.pressed).forEach((isPressed, buttonIndex) => {
         if(isPressed) {
-          pushedButtons.push(buttonIndex);
-          console.log(pushedButtons);
+          buttonsPushed.push(buttonIndex);
         }
       })
 
