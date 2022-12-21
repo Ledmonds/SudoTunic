@@ -65,6 +65,7 @@ function startGame()
         return;
     }
 
+    music.loop = true;
     music.play();
     $(".start").fadeOut();
     
