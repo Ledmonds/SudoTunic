@@ -80,8 +80,6 @@ function startGame()
 function stepGame()
 { 
     chime.play();
-    chime.play();
-    chime.play();
     buttonsPushed = [];
     $("#"+levels[currentLevel].Id).toggleClass("transparent");
     currentLevel++;
