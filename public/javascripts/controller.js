@@ -31,9 +31,14 @@ const loop = () => {
     if (buttonstate !== statenow) {
 
       gamepad.buttons.map(e => e.pressed).forEach((isPressed, buttonIndex) => {
-        if(isPressed && buttonIndex in buttonLookup) {
-          buttonsPushed.push(buttonLookup[buttonIndex]);
-          target.dispatchEvent(new Event('button'));
+        if (isPressed)
+        {
+          if(buttonIndex in buttonLookup) {
+            buttonsPushed.push(buttonLookup[buttonIndex]);
+            dpad_event.dispatchEvent(new Event('dpad_event'));
+          } 
+  
+          button_event.dispatchEvent(new Event('button_event'));
         }
       })
 

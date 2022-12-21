@@ -1,48 +1,51 @@
 var levels = [
     {
-        Level: 1,
+        Id: "game_start",
+        ImagePath: "/images/SudoTunic_Level_1.png",
+        Soloution: null,
+        Playable: false,
+    },
+    {
+        Id: "level_1",
         ImagePath: "/images/SudoTunic_Level_1.png",
         Soloution: ["down", "left", "down", "right", "down"],
         Playable: true,
     },
     {
-        Level: 2,
+        Id: "level_2",
         ImagePath: "/images/SudoTunic_Level_2.png",
         Soloution: ["right", "up", "left", "up", "right", "down", "right", "up", "left", "up", "right", "down", "right", "up", "left", "up", "right"],
         Playable: true,
     },
     {
-        Level: 3,
+        Id: "level_3",
         ImagePath: "/images/SudoTunic_Level_3.png",
         Soloution: ["right", "down", "left", "down", "right", "down", "left", "down", "left", "up"],
         Playable: true,
     },
     {
-        Level: 4,
+        Id: "game_end",
         ImagePath: "/images/SudoTunic_EndGame.png",
-        Soloution: [1,2,3,4],
+        Soloution: null,
         Playable: false,
     }
 ];
 
-const target = new EventTarget();
-target.addEventListener('button', puzzleCheck);
+// Globals
+var button_event = new EventTarget();
+button_event.addEventListener('button_event', startGame);
+
+var dpad_event = new EventTarget();
+dpad_event.addEventListener('dpad_event', puzzleCheck);
 
 var currentLevel = 0;
-
 var gameStarted = false;
+
+var music = new Audio('/audio/music.mp3');
 var chime = new Audio('/audio/chime.mp3');
-var currentImageSwap = "top";
 
+// Page Load
 $(document).ready(function() {
-    $("#game").click(function() 
-    {
-        if (!gameStarted)
-        {
-            startGame();
-        }
-    });
-
     $("#game").sparkle({
         color: "#FFFFFF",
         count: 50,
@@ -51,64 +54,59 @@ $(document).ready(function() {
         minSize: 4,
         maxSize: 7,
         direction: "both"
-      });
+    });
 });
 
-function puzzleCheck()
+// Functions
+function startGame()
 {
-    console.log("Solotuoin: " + levels[currentLevel - 1].Soloution);
-    console.log("Buttons: " + buttonsPushed);
-    if (buttonsPushed.length < levels[currentLevel - 1].Soloution.length)
+    if (gameStarted)
     {
         return;
     }
 
-
-    for (var i = levels[currentLevel - 1].Soloution.length; i >= 0; i--) {
-        console.log(i);
-        console.log("Solotuoin: " + levels[currentLevel - 1].Soloution[i-1]);
-        console.log("Buttons: " + buttonsPushed[i-1]);
-        if (levels[currentLevel - 1].Soloution[i-1] != buttonsPushed[i-1])
-        {
-            return;
-        }
-    } 
-
-    chime.play();
+    music.play();
+    $(".start").fadeOut();
+    
+    gameStarted = true;
     stepGame();
 }
 
+// Reset inputs and step the game a sinlge level.
 function stepGame()
 {
+    chime.play();
     buttonsPushed = [];
+    $("#"+levels[currentLevel].Id).toggleClass("transparent");
     currentLevel++;
-    $("#top").toggleClass("transparent");
-    imageSwap();
 }
 
-function startGame()
+function puzzleCheck()
 {
-    playMusic();
-    gameStarted = true;
-    currentLevel = 1;
+    if (!levels[currentLevel].Playable)
+    {
+        return;
+    }
 
-    $(".start").fadeOut();
-    
-    $("#top").toggleClass("transparent");
-    imageSwap();
-}
+    // Not even enough buttons pushed for this solution to be correct.
+    if (buttonsPushed.length < levels[currentLevel].Soloution.length)
+    {
+        return;
+    }
 
-function imageSwap()
-{
-    var element = $("#"+currentImageSwap);
-    
-    setTimeout(() => {  element[0].src = levels[currentLevel].ImagePath; }, 2000);   
-    
-    currentImageSwap = currentImageSwap == "top" ? "bottom" : "top";
-}
+    console.log(levels[currentLevel]);
 
-function playMusic()
-{
-    var audio = new Audio('/audio/music.mp3');
-    audio.play();
+    // Grabbing sliced buttonsPushed as we know the last button pushed minus the sol length is our potential soloution to compre 
+    var levelSoloution = levels[currentLevel].Soloution;
+    var userSoloution = buttonsPushed.slice(buttonsPushed.length - levelSoloution.length, buttonsPushed.length);
+
+    console.log("Level: " + levelSoloution.toString());
+    console.log("Input: " + userSoloution.toString());
+    
+    if (levelSoloution.toString() !== userSoloution.toString())
+    {
+        return;
+    }
+
+    stepGame();
 }
