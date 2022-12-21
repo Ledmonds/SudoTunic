@@ -46,6 +46,11 @@ var chime = new Audio('/audio/chime.mp3');
 
 // Page Load
 $(document).ready(function() {
+    $(document).on('touchstart', function() {
+        music.loop = true;
+        music.play();
+    });
+
     $("#game").sparkle({
         color: "#FFFFFF",
         count: 50,
@@ -65,8 +70,6 @@ function startGame()
         return;
     }
 
-    music.loop = true;
-    music.play();
     $(".start").fadeOut();
     
     gameStarted = true;
