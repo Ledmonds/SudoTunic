@@ -2,19 +2,19 @@ var levels = [
     {
         Level: 1,
         ImagePath: "/images/SudoTunic_Level_1.png",
-        Soloution: [1,2,3,4],
+        Soloution: ["down", "left", "down", "right", "down"],
         Playable: true,
     },
     {
         Level: 2,
         ImagePath: "/images/SudoTunic_Level_2.png",
-        Soloution: [1,2,3,4],
+        Soloution: ["right", "up", "left", "up", "right", "down", "right", "up", "left", "up", "right", "down", "right", "up", "left", "up", "right"],
         Playable: true,
     },
     {
         Level: 3,
         ImagePath: "/images/SudoTunic_Level_3.png",
-        Soloution: [1,2,3,4],
+        Soloution: ["right", "down", "left", "down", "right", "down", "left", "down", "left", "up"],
         Playable: true,
     },
     {
@@ -23,10 +23,13 @@ var levels = [
         Soloution: [1,2,3,4],
         Playable: false,
     }
-]
+];
+
+const target = new EventTarget();
+target.addEventListener('button', puzzleCheck);
 
 var currentLevel = 0;
-var buttonsPushed = [];
+
 var gameStarted = false;
 var chime = new Audio('/audio/chime.mp3');
 var currentImageSwap = "top";
@@ -37,8 +40,6 @@ $(document).ready(function() {
         if (!gameStarted)
         {
             startGame();
-        } else {
-            stepGame();
         }
     });
 
@@ -53,8 +54,33 @@ $(document).ready(function() {
       });
 });
 
+function puzzleCheck()
+{
+    console.log("Solotuoin: " + levels[currentLevel - 1].Soloution);
+    console.log("Buttons: " + buttonsPushed);
+    if (buttonsPushed.length < levels[currentLevel - 1].Soloution.length)
+    {
+        return;
+    }
+
+
+    for (var i = levels[currentLevel - 1].Soloution.length; i >= 0; i--) {
+        console.log(i);
+        console.log("Solotuoin: " + levels[currentLevel - 1].Soloution[i-1]);
+        console.log("Buttons: " + buttonsPushed[i-1]);
+        if (levels[currentLevel - 1].Soloution[i-1] != buttonsPushed[i-1])
+        {
+            return;
+        }
+    } 
+
+    chime.play();
+    stepGame();
+}
+
 function stepGame()
 {
+    buttonsPushed = [];
     currentLevel++;
     $("#top").toggleClass("transparent");
     imageSwap();
@@ -62,6 +88,7 @@ function stepGame()
 
 function startGame()
 {
+    playMusic();
     gameStarted = true;
     currentLevel = 1;
 
@@ -85,8 +112,3 @@ function playMusic()
     var audio = new Audio('/audio/music.mp3');
     audio.play();
 }
-
-document.addEventListener('buttonPushed', (b) => { 
-    buttonsPushed.push(b);
-    console.log(buttonsPushed);
- }, false);
