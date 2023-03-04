@@ -6,10 +6,10 @@ FROM node:19-alpine
 WORKDIR /usr/src/app
 
 # Install packages
-COPY package*.json ./
+COPY ./src/package*.json ./
 RUN npm install
 
-COPY . .
+COPY ./src/ .
 
 EXPOSE 3000
 
